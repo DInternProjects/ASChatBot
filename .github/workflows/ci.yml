@@ -1,5 +1,7 @@
 name: Python CI/CD Pipeline
 
+
+
 on:
   push:
     branches:
@@ -44,6 +46,13 @@ jobs:
         pip show pytest
         pip list
 
-    # Step 6: Automated testing
+    # Step 6: Lint the code
+    - name: Lint with flake8
+      run: |
+        flake8 --statistics --count .  
+    
+    
+        # Step 7: Automated testing
     - name: Run tests
       run: pytest 
+
