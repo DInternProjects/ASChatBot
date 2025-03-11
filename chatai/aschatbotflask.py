@@ -1,7 +1,11 @@
-from flask import Flask
-from pymongo import MongoClient
+"""
+This module contains the core Flask app for the chatbot application.
+It sets up a connection to MongoDB and displays an example route.
+"""
+
+import os  # Standard library import
+from flask import Flask  # Third-party imports
 from dotenv import load_dotenv
-import os
 
 # Load .env variables
 load_dotenv()
@@ -11,13 +15,14 @@ app = Flask(__name__)
 # MongoDB connection
 mongo_username = os.getenv('MONGODB_USERNAME')
 mongo_password = os.getenv('MONGODB_PASSWORD')
-mongo_uri = os.getenv('MONGODB_URI')
-
-# Example route to display OpenAI API Key (to match your current setup)
-api_key = os.getenv("OPENAI_API_KEY")
+mongo_uri = os.getenv('MONGO_URI')
 
 @app.route("/")
 def hello_world():
+    """
+    Displays the OpenAI API Key as an example route.
+    """
+    api_key = os.getenv("OPENAI_API_KEY")
     return f"<p>Your OpenAI API Key: {api_key}</p>"
 
 if __name__ == "__main__":
