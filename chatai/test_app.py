@@ -1,5 +1,5 @@
 import pytest
-from aschatbotflask import app  # Import your Flask app
+from chatai import app  # Import your Flask app
 
 @pytest.fixture
 def client():

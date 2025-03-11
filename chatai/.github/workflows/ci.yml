@@ -46,4 +46,4 @@ jobs:
 
     # Step 6: Automated testing
     - name: Run tests
-      run: pytest tests/
+      run: pytest 
