@@ -9,7 +9,7 @@ from aschatbotflask import app  # Import your Flask app
 
 @pytest.fixture
 
-def client1():
+def client2():
 
     """
     Provides a test client for the Flask application.
@@ -18,7 +18,7 @@ def client1():
     with app.test_client() as client:
         yield client
 
-def test_hello_world(client2):
+def test_hello_world(client2): # pylint: disable=redefined-outer-name
     """
     Tests the root ("/") route of the Flask application.
     Ensures the status code is 200 and the response contains the expected text.
