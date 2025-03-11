@@ -47,9 +47,10 @@ jobs:
         pip list
 
     # Step 6: Lint the code
-    - name: Lint with flake8
+    - name: Analysing the code with pylint
       run: |
-        flake8 --statistics --count .  
+        pylint $(git ls-files '*.py')
+ 
     
     
         # Step 7: Automated testing
