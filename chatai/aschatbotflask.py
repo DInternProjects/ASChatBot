@@ -1,15 +1,19 @@
-#. .venv/bin/activate
-
-
 from flask import Flask
+from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 
-#load .env variables
+# Load .env variables
 load_dotenv()
 
 app = Flask(__name__)
 
+# MongoDB connection
+mongo_username = os.getenv('MONGODB_USERNAME')
+mongo_password = os.getenv('MONGODB_PASSWORD')
+mongo_uri = os.getenv('MONGODB_URI')
+
+# Example route to display OpenAI API Key (to match your current setup)
 api_key = os.getenv("OPENAI_API_KEY")
 
 @app.route("/")
