@@ -1,3 +1,8 @@
+"""
+This module sets up a Flask web application to interact with
+a locally running DeepSeek API for chatbot functionality.
+"""
+
 import os
 import traceback  # Corrected import order
 from flask import Flask, render_template, request, jsonify
@@ -40,29 +45,35 @@ def send_message():
 
         # Send the user's message to the DeepSeek API
         payload = {"prompt": user_message}
-        
+
         # Added timeout argument to avoid hanging indefinitely
-        response = requests.post(DEEPSEEK_API_URL, json=payload, timeout=10)
+        response = requests.post(
+            DEEPSEEK_API_URL,
+            json=payload,
+            timeout=10
+        )
         response.raise_for_status()
 
         # Parse the DeepSeek API response
         response_data = response.json()
-        bot_message = response_data.get("choices", [{}])[0].get("text", "No response received from DeepSeek API.")
-        
+        bot_message = response_data.get("choices", [{}])[0].get(
+            "text",
+            "No response received from DeepSeek API."
+        )
         # Return the bot's message to the frontend
         return jsonify({"message": bot_message})
 
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException as error:
         # Handle HTTP errors with DeepSeek API
         print("Error communicating with DeepSeek API:")
         traceback.print_exc()
-        return jsonify({"error": f"Failed to connect to DeepSeek API: {e}"}), 500
+        return jsonify({"error": f"Failed to connect to DeepSeek API: {error}"}), 500
 
-    except Exception as e:
-        # Removed unused variable 'e' and replaced with underscore
-        print("Server error:")
+    except (KeyError, TypeError) as error:
+        # Handle specific potential exceptions
+        print(f"Error parsing DeepSeek API response: {error}")
         traceback.print_exc()
-        return jsonify({"error": "Server encountered an error. Please check the logs."}), 500
+        return jsonify({"error": f"Error processing API response: {error}"}), 500
 
 if __name__ == "__main__":
     print("Starting Flask app...")
