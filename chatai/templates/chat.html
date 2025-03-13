@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Add Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif; /* Use Roboto for a modern look */
+            background-color: #f8f9fa; /* Subtle light gray background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            height: 80%; /* Make it larger for a more immersive experience */
+            overflow: hidden;
+        }
+
+        #chat-window {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f1f1f1; /* Light gray for chat area */
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-message {
+            margin: 10px 0;
+            padding: 10px;
+            max-width: 70%;
+            margin-left: auto; /* Align right */
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 12px 0 12px 12px;
+            font-size: 14px;
+        }
+
+        .bot-message {
+            margin: 10px 0;
+            padding: 10px;
+            max-width: 70%;
+            margin-right: auto; /* Align left */
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 0 12px 12px 12px;
+            font-size: 14px;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 15px;
+            background-color: #ffffff;
+            border-top: 1px solid #ddd;
+            gap: 10px;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        #user-input:focus {
+            border-color: #007bff; /* Highlight border when focused */
+        }
+
+        #send-button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #send-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chat-window">
+            <!-- Chat messages will dynamically appear here -->
+        </div>
+        <div class="input-container">
+            <input id="user-input" type="text" placeholder="Type your message here..." autocomplete="off" />
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatWindow = document.getElementById('chat-window');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+
+            // Function to append messages to the chat window
+            function addMessage(content, isUser = true) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+                messageDiv.textContent = content;
+                chatWindow.appendChild(messageDiv);
+                chatWindow.scrollTop = chatWindow.scrollHeight; // Auto-scroll
+            }
+
+            // Send message on button click
+            sendButton.addEventListener('click', async () => {
+                const userMessage = userInput.value.trim();
+                if (!userMessage) return;
+
+                addMessage(userMessage); // Add user's message
+                userInput.value = ''; // Clear input box
+
+                // Simulate sending the message to the server and receiving a response
+                try {
+                    const response = await fetch('/send_message', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: userMessage })
+                    });
+                    const data = await response.json();
+                    if (data.message) {
+                        addMessage(data.message, false); // Add bot's message
+                    } else {
+                        addMessage('Error: Unable to retrieve response.', false);
+                    }
+                } catch (error) {
+                    addMessage('Error: Could not send the message.', false);
+                }
+            });
+
+            // Allow Enter key to send messages
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendButton.click();
+            });
+        });
+    </script>
+</body>
+</html>
