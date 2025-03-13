@@ -12,7 +12,7 @@ app = Flask(__name__)
 # Define the DeepSeek API endpoint (use the address provided by LM Studio)
 DEEPSEEK_API_URL = os.getenv("API_ADDRESS")  # Update this to the correct endpoint
 
-@app.route("/")
+@app.route("/" )
 def welcome():
     """
     Displays the welcome screen with a redirect button to the chat interface.
