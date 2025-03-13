@@ -27,4 +27,4 @@ def test_hello_world(client2): # pylint: disable=redefined-outer-name
     response = client2.get('/')
     # Assert that the response data matches the expected output
     assert response.status_code == 200
-    assert b"Your OpenAI API Key:" in response.data
+    assert b"Welcome to the Chatbot Interface!" in response.data

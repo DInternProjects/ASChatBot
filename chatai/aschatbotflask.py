@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Define the DeepSeek API endpoint (use the address provided by LM Studio)
-DEEPSEEK_API_URL = "http://10.9.96.111:1234/v1/completions"  # Update this to the correct endpoint
+DEEPSEEK_API_URL = os.getenv("API_ADDRESS")  # Update this to the correct endpoint
 
 @app.route("/")
 def welcome():
