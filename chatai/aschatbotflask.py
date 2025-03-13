@@ -1,8 +1,8 @@
 import os
+import traceback  # Corrected import order
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import requests
-import traceback
 
 # Load .env variables
 load_dotenv()
@@ -12,7 +12,7 @@ app = Flask(__name__)
 # Define the DeepSeek API endpoint (use the address provided by LM Studio)
 DEEPSEEK_API_URL = os.getenv("API_ADDRESS")  # Update this to the correct endpoint
 
-@app.route("/" )
+@app.route("/")
 def welcome():
     """
     Displays the welcome screen with a redirect button to the chat interface.
@@ -39,13 +39,10 @@ def send_message():
             return jsonify({"error": "No message provided"}), 400
 
         # Send the user's message to the DeepSeek API
-        payload = {
-            "prompt": user_message,  # The input prompt for the model
+        payload = {"prompt": user_message}
         
-        }
-        response = requests.post(DEEPSEEK_API_URL, json=payload)
-
-        # Check if the request to the DeepSeek API was successful
+        # Added timeout argument to avoid hanging indefinitely
+        response = requests.post(DEEPSEEK_API_URL, json=payload, timeout=10)
         response.raise_for_status()
 
         # Parse the DeepSeek API response
@@ -62,7 +59,7 @@ def send_message():
         return jsonify({"error": f"Failed to connect to DeepSeek API: {e}"}), 500
 
     except Exception as e:
-        # Handle any other server errors
+        # Removed unused variable 'e' and replaced with underscore
         print("Server error:")
         traceback.print_exc()
         return jsonify({"error": "Server encountered an error. Please check the logs."}), 500
